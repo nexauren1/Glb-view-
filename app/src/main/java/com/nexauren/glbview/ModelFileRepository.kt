@@ -17,19 +17,20 @@ data class ModelFile(
     val sizeBytes: Long,
     val modifiedAt: Long
 ) {
-    val isGlb: Boolean get() = name.endsWith(".glb", ignoreCase = true)
-    val isGltf: Boolean get() = name.endsWith(".gltf", ignoreCase = true)
+    val extension: String get() = name.substringAfterLast('.', "").uppercase(Locale.ROOT)
+    val isGlb: Boolean get() = extension == "GLB"
+    val isGltf: Boolean get() = extension == "GLTF"
 }
 
 private const val PREFS_NAME = "glb_view_preferences"
 private const val LIBRARY_KEY = "saved_model_library"
 private const val LANGUAGE_KEY = "ui_language"
 
-fun isSupportedModelName(name: String?): Boolean =
-    !name.isNullOrBlank() && (
-        name.endsWith(".glb", ignoreCase = true) ||
-            name.endsWith(".gltf", ignoreCase = true)
-        )
+fun isSupportedModelName(name: String?): Boolean {
+    if (name.isNullOrBlank()) return false
+    return name.substringAfterLast('.', "").uppercase(Locale.ROOT) in
+        setOf("GLB", "GLTF", "3MF", "STL", "OBJ", "PLY")
+}
 
 fun readModelFileBlocking(context: Context, uri: Uri): ModelFile? {
     var name = ""
