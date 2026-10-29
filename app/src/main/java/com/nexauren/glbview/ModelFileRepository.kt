@@ -153,7 +153,7 @@ fun saveLanguage(context: Context, language: String) {
 }
 
 fun formatFileSize(bytes: Long, language: UiLanguage): String {
-    if (bytes < 0L) return language.text("Tamanho desconhecido", "Size unavailable")
+    if (bytes < 0L) return if (language == UiLanguage.PT) "Tamanho desconhecido" else "Size unavailable"
     if (bytes < 1024L) return bytes.toString() + " B"
     val units = arrayOf("KB", "MB", "GB", "TB")
     var value = bytes.toDouble()
