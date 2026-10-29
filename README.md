@@ -6,14 +6,14 @@ A lightweight-first Android 3D model viewer and batch utility, built with Kotlin
 
 ## First implementation
 
-- Open GLB and glTF files from Android's document picker or from another app's Share/Open action.
+- Open GLB, glTF, 3MF, STL, OBJ and PLY files from Android's document picker or from another app's Share/Open action.
 - Import many files at once.
 - Recursively scan a folder and its subfolders using Android's Storage Access Framework; no broad storage permission.
 - Keep a local library of URI references and basic file metadata.
 - Search and multi-select models.
 - View one 3D model at a time with touch orbit/zoom controls and model animation support.
 - Share one or many source files with compatible apps.
-- Batch-inspect GLB headers and JSON chunks; count meshes, nodes, materials and animations when the JSON is available.
+- Batch-inspect GLB headers and JSON chunks; count meshes, nodes, materials and animations when the JSON is available. Other supported formats are explicitly marked as not inspected by this metadata validator.
 - Export inspection results to CSV.
 - PT/EN interface toggle saved on-device.
 
@@ -38,6 +38,6 @@ The 3D renderer is the main native dependency. Release builds enable R8 code shr
 ## Notes / current scope
 
 - This is the initial app foundation, not a final release.
-- The validator checks GLB v2 structure and the first JSON chunk. For glTF JSON files, it checks JSON structure only and does not validate external buffers/textures.
+- The validator checks GLB v2 structure and the first JSON chunk. For glTF JSON files, it checks JSON structure only and does not validate external buffers/textures. 3MF, STL, OBJ and PLY can be viewed but are marked as not inspected by the GLB/glTF metadata validator.
 - Model viewing depends on the format and complexity of each asset and the device GPU/RAM.
 - Folder scans run off the main thread; very large files are not all opened in the renderer at once.
