@@ -58,6 +58,7 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.runtime:runtime-saveable")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.documentfile:documentfile:1.0.1")
     implementation("io.github.sceneview:sceneview:4.62.0")
