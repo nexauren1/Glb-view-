@@ -180,4 +180,4 @@ fun inspectionResultsToCsv(results: List<InspectionResult>): String = buildStrin
     }
 }
 
-private fun csvEscape(value: String): String = """ + value.replace(""", """") + """
+private fun csvEscape(value: String): String = "\"" + value.replace("\"", "\"\"") + "\""
