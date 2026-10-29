@@ -235,7 +235,9 @@ fun GlbViewApp(initialUris: List<Uri>) {
             busy = true
             status = language.text("A validar os modelos…", "Validating models…")
             reports = targets.map { inspectModel(context, it) }
-            status = language.text("Válidos: ", "Valid: ") + reports.count { it.valid } + " / " + reports.size
+            status = language.text("Válidos: ", "Valid: ") + reports.count { it.valid && it.inspected } +
+                language.text(" em ", " of ") + reports.count { it.inspected} +
+                language.text(" ficheiros verificados", " inspected files")
             busy = false
             screen = AppScreen.TOOLS
         }
@@ -471,7 +473,7 @@ private fun ModelFileRow(
                 modifier = Modifier.size(52.dp).clip(RoundedCornerShape(14.dp))
                     .background(Brush.linearGradient(listOf(Color(0xFF243D63), Color(0xFF1A554F)))),
                 contentAlignment = Alignment.Center
-            ) { Text(if (model.isGlb) "GLB" else "glTF", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+            ) { Text(model.extension, fontSize = 12.sp, fontWeight = FontWeight.Bold) }
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(model.name, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(
@@ -588,7 +590,11 @@ private fun ViewerScreen(
             InfoCard(
                 modifier = Modifier.weight(1f),
                 label = language.text("Formato", "Format"),
-                value = if (model.isGlb) "GLB · Binary" else "glTF · JSON"
+                value = when (model.extension) {
+                    "GLB" -> "GLB · Binary"
+                    "GLTF" -> "glTF · JSON"
+                    else -> model.extension
+                }
             )
             InfoCard(
                 modifier = Modifier.weight(1f),
@@ -688,7 +694,8 @@ private fun ToolsScreen(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(language.text("Relatório de validação", "Validation report"), fontWeight = FontWeight.Bold)
                                     Text(
-                                        language.text("Válidos: ", "Valid: ") + reports.count { it.valid } + " / " + reports.size,
+                                        language.text("Válidos: ", "Valid: ") + reports.count { it.valid && it.inspected } +
+                                            language.text(" em ", " of ") + reports.count { it.inspected },
                                         fontSize = 12.sp,
                                         color = mutedText
                                     )
@@ -703,7 +710,11 @@ private fun ToolsScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    Text(if (result.valid) "✓" else "!", color = if (result.valid) accentMint else warningAmber, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        when { !result.inspected -> "–"; result.valid -> "✓"; else -> "!" },
+                                        color = when { !result.inspected -> mutedText; result.valid -> accentMint; else -> warningAmber },
+                                        fontWeight = FontWeight.Bold
+                                    )
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(result.file.name, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                                         Text(result.note, color = mutedText, fontSize = 10.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
