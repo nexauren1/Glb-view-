@@ -22,6 +22,11 @@
                 <data android:mimeType="model/gltf-binary" />
                 <data android:mimeType="model/gltf+json" />
                 <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="model/stl" />
+                <data android:mimeType="model/obj" />
+                <data android:mimeType="model/ply" />
+                <data android:mimeType="model/3mf" />
+                <data android:mimeType="application/vnd.ms-3mfdocument" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -29,6 +34,11 @@
                 <data android:mimeType="model/gltf-binary" />
                 <data android:mimeType="model/gltf+json" />
                 <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="model/stl" />
+                <data android:mimeType="model/obj" />
+                <data android:mimeType="model/ply" />
+                <data android:mimeType="model/3mf" />
+                <data android:mimeType="application/vnd.ms-3mfdocument" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -36,6 +46,11 @@
                 <data android:mimeType="model/gltf-binary" />
                 <data android:mimeType="model/gltf+json" />
                 <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="model/stl" />
+                <data android:mimeType="model/obj" />
+                <data android:mimeType="model/ply" />
+                <data android:mimeType="model/3mf" />
+                <data android:mimeType="application/vnd.ms-3mfdocument" />
             </intent-filter>
         </activity>
     </application>
