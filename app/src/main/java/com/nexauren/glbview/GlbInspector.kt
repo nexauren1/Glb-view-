@@ -20,7 +20,8 @@ data class InspectionResult(
     val nodes: Int?,
     val materials: Int?,
     val animations: Int?,
-    val note: String
+    val note: String,
+    val inspected: Boolean = true
 )
 
 private const val GLB_MAGIC = 0x46546C67
@@ -31,6 +32,13 @@ suspend fun inspectModel(context: Context, file: ModelFile): InspectionResult =
     withContext(Dispatchers.IO) { inspectModelBlocking(context, file) }
 
 private fun inspectModelBlocking(context: Context, file: ModelFile): InspectionResult {
+    if (!file.isGlb && !file.isGltf) {
+        return InspectionResult(
+            file, false, file.extension, "—", null, null, null, null,
+            "Viewing is supported; batch metadata inspection is available for GLB/glTF.",
+            inspected = false
+        )
+    }
     val stream = runCatching {
         context.contentResolver.openInputStream(Uri.parse(file.uri))
     }.getOrNull() ?: return failure(file, "Unable to open the file")
@@ -120,7 +128,7 @@ private fun stats(
 private fun failure(file: ModelFile, note: String) = InspectionResult(
     file = file,
     valid = false,
-    format = if (file.isGlb) "GLB" else "glTF JSON",
+    format = if (file.isGlb) "GLB" else if (file.isGltf) "glTF JSON" else file.extension,
     version = "—",
     meshes = null,
     nodes = null,
@@ -153,12 +161,13 @@ private fun readBounded(input: InputStream, maxBytes: Int): ByteArray {
 }
 
 fun inspectionResultsToCsv(results: List<InspectionResult>): String = buildString {
-    appendLine("file,format,valid,version,meshes,nodes,materials,animations,note")
+    appendLine("file,format,inspected,valid,version,meshes,nodes,materials,animations,note")
     results.forEach { result ->
         appendLine(
             listOf(
                 result.file.name,
                 result.format,
+                result.inspected.toString(),
                 result.valid.toString(),
                 result.version,
                 result.meshes?.toString().orEmpty(),
